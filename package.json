@@ -90,5 +90,6 @@
     "overrides": {
       "@rollup/plugin-alias": "^5.1.1"
     }
-  }
+  },
+  "packageManager": "pnpm@10.6.3"
 }
