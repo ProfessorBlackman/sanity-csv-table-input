@@ -1,5 +1,5 @@
 import { TrashIcon, UploadIcon } from '@sanity/icons'
-import { Badge, Button, Card, Flex, Label, Stack, Text, TextArea, useToast } from '@sanity/ui'
+import { Badge, Box, Button, Card, Flex, Label, Stack, Text, TextArea, TextInput, useToast } from '@sanity/ui'
 import Papa from 'papaparse'
 import React, { useCallback, useId, useState } from 'react'
 import { PatchEvent, set, unset } from 'sanity'
@@ -7,7 +7,8 @@ import { PatchEvent, set, unset } from 'sanity'
 import { ObjectInputProps } from 'sanity'
 
 // Type for the final data structure stored in Sanity
-interface CsvRowData {
+// Type for the final data structure stored in Sanity
+export interface CsvRowData {
     _type: 'csvRow'
     _key: string
     cells: string[]
@@ -19,6 +20,41 @@ type CsvTableInputProps = ObjectInputProps
 
 // Utility to generate a unique key for array items
 const generateKey = () => Math.random().toString(36).substring(2, 9)
+
+interface CsvTableViewProps {
+    data: CsvRowData[]
+    onCellChange?: (rowKey: string, cellIndex: number, newValue: string) => void
+}
+
+export const CsvTableView = ({ data, onCellChange }: CsvTableViewProps) => {
+    return (
+        <Box overflow="auto" padding={1}>
+            <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+                <tbody>
+                    {data.map((row) => (
+                        <tr key={row._key}>
+                            {row.cells.map((cell, cellIndex) => (
+                                <td key={cellIndex} style={{ padding: '4px', minWidth: '150px' }}>
+                                    <TextInput
+                                        value={cell}
+                                        onChange={
+                                            onCellChange
+                                                ? (e) => onCellChange(row._key, cellIndex, e.currentTarget.value)
+                                                : undefined
+                                        }
+                                        readOnly={!onCellChange}
+                                        fontSize={1}
+                                        padding={2}
+                                    />
+                                </td>
+                            ))}
+                        </tr>
+                    ))}
+                </tbody>
+            </table>
+        </Box>
+    )
+}
 
 export const CsvTableInput = (props: CsvTableInputProps): React.JSX.Element => {
     const { onChange, value: rawValue, elementProps } = props;
@@ -142,6 +178,14 @@ export const CsvTableInput = (props: CsvTableInputProps): React.JSX.Element => {
         })
     }, [onChange, toast])
 
+    // Handler for updating a single cell
+    const handleCellChange = useCallback(
+        (rowKey: string, cellIndex: number, newValue: string) => {
+            onChange(PatchEvent.from([set(newValue, ['data', { _key: rowKey }, 'cells', cellIndex])]))
+        },
+        [onChange],
+    )
+
     const rows = value?.data?.length ?? 0
 
     return (
@@ -217,16 +261,21 @@ export const CsvTableInput = (props: CsvTableInputProps): React.JSX.Element => {
                     />
                 </Flex>
 
-                {/* 4. Status/Preview */}
-                <Card tone="caution" padding={3} radius={2} hidden={!rows}>
-                    <Text size={1} weight="semibold">
-                        ✅ Data Loaded: {rows} Rows
-                    </Text>
-                    <Text size={1} muted>
-                        The table data is saved. You can use the document&apos;s built-in array editor below to
-                        refine the data if needed.
-                    </Text>
-                </Card>
+                {/* 4. Status/Preview & Editable Table */}
+                {rows > 0 && (
+                    <Stack space={3}>
+                        <Card tone="caution" padding={3} radius={2}>
+                            <Text size={1} weight="semibold">
+                                ✅ Data Loaded: {rows} Rows
+                            </Text>
+                            <Text size={1} muted>
+                                You can edit the values directly in the table below.
+                            </Text>
+                        </Card>
+
+                        <CsvTableView data={value?.data || []} onCellChange={handleCellChange} />
+                    </Stack>
+                )}
             </Stack>
         </Card>
     )

@@ -1,6 +1,7 @@
 import { defineArrayMember, defineField, definePlugin, defineType } from 'sanity'
 
 import { CsvTableInput } from './csv-table-input'
+import { CsvTablePreview } from './csv-table-preview'
 
 /**
  * Defines the structure for a single row in our table data.
@@ -55,6 +56,12 @@ export const csvTableType = defineType({
     // 💡 CRITICAL: Link the custom React component to this field type
     components: {
         input: CsvTableInput,
+        preview: CsvTablePreview,
+    },
+    preview: {
+        select: {
+            data: 'data',
+        },
     },
 })
 
