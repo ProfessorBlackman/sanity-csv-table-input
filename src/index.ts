@@ -1,0 +1,1 @@
+export { csvTablePlugin } from './schema'

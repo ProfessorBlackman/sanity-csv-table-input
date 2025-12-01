@@ -1,0 +1,85 @@
+{
+  "name": "sanity-plugin-csv-table-input",
+  "version": "1.0.0",
+  "description": "A sanity plugin for handling csv data",
+  "keywords": [
+    "sanity",
+    "sanity-plugin"
+  ],
+  "homepage": "https://github.com/ProfessorBlackman/sanity-csv-table-input#readme",
+  "bugs": {
+    "url": "https://github.com/ProfessorBlackman/sanity-csv-table-input/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/ProfessorBlackman/sanity-csv-table-input.git"
+  },
+  "license": "BSD-3-Clause",
+  "author": "Methuselah Nwodobeh <methuselahnwodobeh@gmail.com>",
+  "sideEffects": false,
+  "type": "commonjs",
+  "exports": {
+    ".": {
+      "source": "./src/index.ts",
+      "import": "./dist/index.mjs",
+      "default": "./dist/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist",
+    "sanity.json",
+    "src",
+    "v2-incompatible.js"
+  ],
+  "scripts": {
+    "build": "plugin-kit verify-package --silent && pkg-utils build --strict --check --clean",
+    "format": "prettier --write --cache --ignore-unknown .",
+    "link-watch": "plugin-kit link-watch",
+    "lint": "eslint .",
+    "prepublishOnly": "npm run build",
+    "watch": "pkg-utils watch --strict"
+  },
+  "dependencies": {
+    "@sanity/icons": "^3.7.4",
+    "@sanity/incompatible-plugin": "^1.0.5",
+    "@sanity/ui": "^3.1.11",
+    "@types/papaparse": "^5.5.0",
+    "papaparse": "^5.5.3"
+  },
+  "devDependencies": {
+    "@sanity/pkg-utils": "^9.2.0",
+    "@sanity/plugin-kit": "^4.0.20",
+    "@types/react": "^19.2.7",
+    "@typescript-eslint/eslint-plugin": "^8.48.0",
+    "@typescript-eslint/parser": "^8.48.0",
+    "eslint": "^8.57.1",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-config-sanity": "^7.1.4",
+    "eslint-plugin-prettier": "^5.5.4",
+    "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-react-hooks": "^7.0.1",
+    "prettier": "^3.7.3",
+    "prettier-plugin-packagejson": "^2.5.20",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "sanity": "^4.19.0",
+    "styled-components": "^6.1.19",
+    "typescript": "^5.9.3",
+    "yalc": "1.0.0-pre.53"
+  },
+  "peerDependencies": {
+    "react": "^18",
+    "sanity": "^3"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "pnpm": {
+    "overrides": {
+      "@rollup/plugin-alias": "^5.1.1"
+    }
+  }
+}
